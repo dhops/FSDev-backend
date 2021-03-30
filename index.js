@@ -10,7 +10,6 @@ app.use(express.json())
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
-  console.log("Here")
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
@@ -37,7 +36,7 @@ app.get('/api/persons', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -73,8 +72,8 @@ app.post('/api/persons', (request, response, next) => {
 
   person.save()
     .then(savedPerson => {
-    response.json(savedPerson.toJSON())
-  })
+      response.json(savedPerson.toJSON())
+    })
     .catch(error => next(error))
 })
 
@@ -84,11 +83,11 @@ app.get('/info', (request, response) => {
   Person
     .estimatedDocumentCount()
     .then(docCount => {
-        console.log(docCount)
-        response.end(`Phonebook has info for ${docCount} people. \n\n${date}`)
+      console.log(docCount)
+      response.end(`Phonebook has info for ${docCount} people. \n\n${date}`)
     })
     .catch(err => {
-        console.log(err)
+      console.log(err)
     })
 })
 
