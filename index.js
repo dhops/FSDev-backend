@@ -1,6 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+require('dotenv').config()
+const Person = require('./models/person')
 
 const app = express()
 
@@ -16,47 +18,50 @@ morgan.token('post-data', function (req, res) {
 })
 
 app.use(morgan('post-data'))
+//
+// let persons = [
+//       {
+//         "name": "afads dfad ",
+//         "number": "350925",
+//         "id": 2
+//       },
+//       {
+//         "name": "dfaf",
+//         "number": "3",
+//         "id": 8
+//       },
+//       {
+//         "name": "fdafdf",
+//         "number": "342341",
+//         "id": 9
+//       },
+//       {
+//         "name": "dfafdfa",
+//         "number": "32",
+//         "id": 10
+//       },
+//       {
+//         "name": "fafdf",
+//         "number": "2141",
+//         "id": 11
+//       },
+//       {
+//         "name": "fadf",
+//         "number": "32",
+//         "id": 12
+//       },
+//       {
+//         "name": "daf",
+//         "number": "3",
+//         "id": 13
+//       }
+//     ]
 
-let persons = [
-      {
-        "name": "afads dfad ",
-        "number": "350925",
-        "id": 2
-      },
-      {
-        "name": "dfaf",
-        "number": "3",
-        "id": 8
-      },
-      {
-        "name": "fdafdf",
-        "number": "342341",
-        "id": 9
-      },
-      {
-        "name": "dfafdfa",
-        "number": "32",
-        "id": 10
-      },
-      {
-        "name": "fafdf",
-        "number": "2141",
-        "id": 11
-      },
-      {
-        "name": "fadf",
-        "number": "32",
-        "id": 12
-      },
-      {
-        "name": "daf",
-        "number": "3",
-        "id": 13
-      }
-    ]
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -83,13 +88,13 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  if (!body.name) {
+  if (body.name === undefined) {
     return response.status(400).json({
       error: 'name missing'
     })
   }
 
-  if (!body.number) {
+  if (body.number === undefined) {
     return response.status(400).json({
       error: 'number missing'
     })
