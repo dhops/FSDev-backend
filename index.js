@@ -65,7 +65,6 @@ const generateId = () => {
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -74,11 +73,8 @@ app.post('/api/persons', (request, response, next) => {
 
   person.save()
     .then(savedPerson => {
-      savedPerson.toJSON()
-    })
-    .then(savedAndFormattedPerson => {
-      response.json(savedAndFormattedPerson)
-    })
+    response.json(savedPerson.toJSON())
+  })
     .catch(error => next(error))
 })
 
